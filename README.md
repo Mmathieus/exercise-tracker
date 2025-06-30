@@ -8,6 +8,7 @@ A simple command-line application for tracking exercise routines using SQLite da
 - **Insert Records** - Add completed workouts or plan future exercises
 - **View Records** - Filter and display your exercise history
 - **Update Records** - Modify existing workout data
+- **Delete Records** - Delete existing workout data
 - **Interactive Menu** - User-friendly command-line interface
 
 ## Installation 🚀
@@ -30,6 +31,11 @@ A simple command-line application for tracking exercise routines using SQLite da
    python main.py
    ```
 
+3. Create table/database:
+   ```bash
+   : table
+   ```
+
 ## Usage 💻
 
 ### Available Commands
@@ -38,8 +44,9 @@ When you run the program, you can use these commands:
 
 - `table` - Create a new empty table (⚠️ existing data will be lost)
 - `select` - Filter and retrieve existing records
-- `insert` - Insert new record into the table
+- `insert` - Insert new record(s) into the table
 - `update` - Update existing record values
+- `delete` - Delete existing record(s) from the table
 - `help` - Show available commands
 - `q` - Exit the program
 
@@ -115,7 +122,15 @@ Column to update: actual_reps
 Updated value: 30
 Key column: id
 Key value: 1
--> ✅ RECORD UPDATED
+-> ✅ RECORD(S) UPDATED
+```
+
+### Deleting a Record
+```
+: delete
+Column: id
+Value: 5
+-> ✅ RECORD(S) DELETED
 ```
 
 ## File Structure 📁
@@ -127,6 +142,7 @@ exercise-tracker/
 ├── insert.py        # Record insertion functionality
 ├── get.py           # Record retrieval and filtering
 ├── update.py        # Record update functionality
+|-- delete.py        # Record deletion functionality
 ├── utils.py         # Utility functions
 ├── data/
 │   └── exercise.db  # SQLite database file (empty)
@@ -154,7 +170,6 @@ exercise-tracker/
 
 - Data export/import functionality
 - Input validation (type, format, value)
-- Record deletion
 
 ## Support 💬
 

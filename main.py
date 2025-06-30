@@ -1,6 +1,6 @@
 import sqlite3
 import utils
-import create, insert, get, update
+import create, insert, get, update, delete
 
 try:
     options = {
@@ -8,6 +8,7 @@ try:
         "select": ("Filter and retrieve existing records", lambda: get.get_records(cursor=curr)),
         "insert": ("Insert new record with few options into the table", lambda: insert.insert_record(connection=conn, cursor=curr)),
         "update": ("Update existing record value", lambda: update.update_record(connection=conn, cursor=curr)),
+        "delete": ("Delete existing record", lambda: delete.delete_record(connection=conn, cursor=curr)),
         "q": ("Exit the program", None)
     }
     menu_options = {key: desc for key, (desc, _) in options.items()}
