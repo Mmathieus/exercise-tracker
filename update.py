@@ -7,25 +7,29 @@ def get_changes_from_user():
     set_value = input("Updated value: ").strip()
     where_column = input("Key column: ").strip()
     where_value = input("Key value: ").strip()
-    return (set_column, set_value, where_column, where_value)
+    return (set_column, set_value, where_column, where_value)  
 
-def validate_columns_name(cursor, columns_to_validate):
-    cursor.execute("PRAGMA table_info(everything)")
-    table_columns = [row[1] for row in cursor.fetchall() if row[1] not in ["id", "created_at", "updated_at"]]
-    return all(col in table_columns for col in columns_to_validate)
-    
 
 def update_record(connection, cursor):
     try:
         if (changes_specified := get_changes_from_user()) is None: return
         set_column, set_value, where_column, where_value = changes_specified
-        if validate_columns_name(cursor=cursor, columns_to_validate=(set_column, where_column)) is not True:
-            print("-> INVALID COLUMN(S) OR COLUMN(S) NAMES.\n")
+        
+        if utils.validate_column_choice(cursor=cursor, column_to_validate=set_column, everything=False) is not True:
+            print("-> INVALID 'setting' COLUMN OR COLUMN'S NAME.\n")
             return
+        if utils.validate_column_choice(cursor=cursor, column_to_validate=where_column, everything=True) is not True:
+            print("-> INVALID 'searching' COLUMN OR COLUMN'S NAME.\n")
+            return
+        
+        if utils.records_exist(cursor=cursor, col=where_column, val=where_value) is not True:
+            print("-> NO RECORD(S) TO UPDATE.\n")
+            return
+
         cursor.execute(update_schema.format(column_1=set_column, column_2=where_column),
                        (set_value, utils.get_date_time_format(type="both"), where_value))
         connection.commit()
-        print("-> ✅ RECORD UPDATED\n")
+        print("-> ✅ RECORD(S) UPDATED\n")
     except Exception as e:
-        print("-> ⚠️ RECORD NOT UPDATED")
+        print("-> ⚠️ RECORD(S) NOT UPDATED")
         utils.handle_error(e, __file__)
