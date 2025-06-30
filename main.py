@@ -18,7 +18,7 @@ try:
     menu_options["help"] = "See available commands"
 
 
-    conn = sqlite3.connect("data/database.db")
+    conn = sqlite3.connect("data/exercise.db")
     curr = conn.cursor()
     print("--> 🟢 CONNECTION CREATED\n")
     

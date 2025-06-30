@@ -142,7 +142,7 @@ exercise-tracker/
 ├── insert.py        # Record insertion functionality
 ├── get.py           # Record retrieval and filtering
 ├── update.py        # Record update functionality
-|-- delete.py        # Record deletion functionality
+├── delete.py        # Record deletion functionality
 ├── utils.py         # Utility functions
 ├── data/
 │   └── exercise.db  # SQLite database file (empty)
