@@ -5,20 +5,27 @@ A simple command-line application for tracking exercise routines using SQLite da
 ## Features ✨
 
 - **Create Database Table** - Initialize or reset your exercise database
-- **Insert Records** - Add completed workouts or plan future exercises
+- **Insert Records** - Add past, completed or planned exercises
 - **View Records** - Filter and display your exercise history
-- **Update Records** - Modify existing workout data
-- **Delete Records** - Delete existing workout data
+- **Update Records** - Modify existing exercise records
+- **Delete Records** - Delete existing exercise records
 - **Interactive Menu** - User-friendly command-line interface
 
 ## Installation 🚀
 
 ### Prerequisites
-- Python 3.6+
+- [Python 3.6+](https://www.python.org/downloads/)
 - Required Python packages:
-  ```bash
-  pip install tabulate
-  ```
+
+#### Direct installation
+```bash
+pip install tabulate
+```
+
+#### Using requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 ### Setup
 1. Clone this repository:
@@ -31,9 +38,9 @@ A simple command-line application for tracking exercise routines using SQLite da
    python main.py
    ```
 
-3. Create table/database:
+3. Initialize database:
    ```bash
-   : table
+   ➤ table
    ```
 
 ## Usage 💻
@@ -42,13 +49,13 @@ A simple command-line application for tracking exercise routines using SQLite da
 
 When you run the program, you can use these commands:
 
-- `table` - Create a new empty table (⚠️ existing data will be lost)
+- `table` - Create a new empty database (⚠️ existing data will be lost)
 - `select` - Filter and retrieve existing records
-- `insert` - Insert new record(s) into the table
-- `update` - Update existing record values
-- `delete` - Delete existing record(s) from the table
-- `help` - Show available commands
+- `insert` - Insert new record
+- `update` - Update existing record(s)
+- `delete` - Delete existing record(s)
 - `q` - Exit the program
+- `help` - Show available commands
 
 ### Database Schema
 
@@ -58,78 +65,86 @@ The application uses a SQLite table with the following structure:
 |--------|------|-------------|
 | id | INTEGER | Primary key (auto-increment) |
 | exercise | TEXT | Name of the exercise |
-| actual_reps | INTEGER | Number of reps completed |
+| reps | INTEGER | Number of reps completed |
 | target_reps | INTEGER | Target number of reps |
 | date | TEXT | Date of exercise (YYYY-MM-DD) |
 | time | TEXT | Time of exercise (HH:MM:SS) |
 | created_at | TEXT | Record creation timestamp |
 | updated_at | TEXT | Last update timestamp |
 
-## Examples 📝
+## Examples 🧑‍💻
 
-### Adding a Completed Workout
+### ✚ `INSERT` - Adding a Completed Workout
 ```
-: insert
---- INSERT RECORD MENU ---
-[1] - Full (exercise done!)
-[0] - Partial (exercise in future)
+➤ insert
 
-choice: 1
-date (YYYY-MM-DD): 2024-01-15
-time (HH:MM:SS) (optional): 14:30:00
-exercise: Push-ups
-reps: 25
-expected reps (optional): 30
+╭─── SELECT INSERT ───
+│ [1]  » Exercise from the past
+│ [2]  » Just completed exercise
+│ [3]  » Upcoming exercise
+│
+│─── Info ───
+│ ⭐  Required field
+│ ⚪  Optional field
+
+ Insert ▶ 2
+⭐ Exercise ▶ Push-ups
+⭐ Reps (done) ▶ 30
+⚪ Reps (target) ▶ 25
 -> ✅ RECORD INSERTED
 ```
 
-### Planning a Future Workout
+### 👁️ `SELECT` - Retrieving Records Using Filter
 ```
-: insert
---- INSERT RECORD MENU ---
-[1] - Full (exercise done!)
-[0] - Partial (exercise in future)
+➤ select
 
-choice: 0
-date (YYYY-MM-DD): 2024-01-20
-time (HH:MM:SS) (optional): 16:00:00
-exercise: Squats
-expected reps (optional): 50
--> ✅ RECORD INSERTED
-```
+╭─── FILTER RECORDS? ───
+│ [0]  » No
+│ [1]  » Yes
 
-### Viewing Records with Filters
-```
-: select
---- FILTER RECORDS? ---
-[1] - Yes
-[0] - No
+ Filter ▶ 1
 
-choice: 1
---- COLUMNS FILTER ---
-[1] - Exercise
-[2] - Date
-[3] - Exercise & Date
+╭─── SELECT COLUMN(S) ───
+│ [1]  » Exercise
+│ [2]  » Date
+│ [3]  » Exercise & Date
+│
+│─── Info ───
+│ ⭐  Required field
+│ ⚪  Optional field
 
-filter choice: 1
-exercise: Push-ups
+ Column ▶ 1
+⭐ Exercise ▶ Push-ups
++------+------------+--------+---------------+------------+----------+---------------------+---------------------+
+|  id  |  exercise  |  reps  |  target_reps  |    date    |   time   |     created_at      |     updated_at      |
+|------+------------+--------+---------------+------------+----------+---------------------+---------------------|
+|  1   |  Push-ups  |   30   |      25       | 2025-07-04 | 00:10:21 | 2025-07-04 00:10:21 | 2025-07-04 00:10:21 |
++------+------------+--------+---------------+------------+----------+---------------------+---------------------+
 ```
 
-### Updating a Record
+### ✏️ `UPDATE` - Updating Record
 ```
-: update
-Column to update: actual_reps
-Updated value: 30
-Key column: id
-Key value: 1
+➤ update
+╭─── Info ───
+│ ⭐  Required field
+│ ⚪  Optional field
+
+⭐ Updating column ▶ reps
+⭐ Updated value ▶ 28
+⭐ Searching column ▶ id
+⭐ Searching value ▶ 1
 -> ✅ RECORD(S) UPDATED
 ```
 
-### Deleting a Record
+### 🗑️ `DELETE` - Deleting Record
 ```
-: delete
-Column: id
-Value: 5
+➤ delete
+╭─── Info ───
+│ ⭐  Required field
+│ ⚪  Optional field
+
+⭐ Searching column ▶ id
+⭐ Searching value ▶ 1
 -> ✅ RECORD(S) DELETED
 ```
 
@@ -137,47 +152,32 @@ Value: 5
 
 ```
 exercise-tracker/
-├── main.py          # Main application entry point
-├── create.py        # Database table creation
-├── insert.py        # Record insertion functionality
-├── get.py           # Record retrieval and filtering
-├── update.py        # Record update functionality
-├── delete.py        # Record deletion functionality
-├── utils.py         # Utility functions
+├── common/
+│   ├── utils.py         # General utility functions used across the application
+│   └── validator.py     # Input validation functions
+├── core/
+│   ├── create.py        # Database table creation and refresh operations
+│   ├── delete.py        # Database delete operations
+│   ├── get.py           # Database read/select operations
+│   ├── insert.py        # Database insert operations
+│   └── update.py        # Database update operations
 ├── data/
-│   └── exercise.db  # SQLite database file (empty)
-└── README.md        # This file
+│   └── exercise.db      # SQLite database file
+├── LICENSE              # Project license
+├── main.py              # Main application entry point
+├── README.md            # Project documentation
+└── requirements.txt     # Python dependencies
 ```
-
-## Features in Detail 🔍
-
-### Record Types
-- **Full Records**: For completed exercises with actual rep counts
-- **Partial Records**: For planning future workouts with target reps only
-
-### Filtering Options
-- View all records
-- Filter by exercise name
-- Filter by date
-- Filter by both exercise name and date
-
-### Data Validation
-- Automatic timestamp generation
-- Simple but not perfect and sophisticated input validation
-- Basic error handling with user-friendly messages
-
-## Future Enhancements 🚀
-
-- Data export/import functionality
-- Input validation (type, format, value)
 
 ## Support 💬
 
-If you encounter any issues or have questions:
-1. Check the existing issues on GitHub
-2. Create a new issue with detailed description
+If you encounter any issues or have questions: 
+1. Check the existing issues on GitHub 
+2. Create a new issue with detailed description 
 3. Include error messages and steps to reproduce
+4. Provide system information (OS, Python version, etc.)
+5. Attach screenshots if applicable
 
 ---
 
-**Happy exercising! 💪**
+# **Happy exercising! 💪**
